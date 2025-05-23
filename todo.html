@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body class="bg-gray-100 p-6">
+    
+    <div class="max-w-4xl mx-auto p-4 bg-white rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold text-center mb-4">Todo List</h2>
+        <table class="w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-gray-300 p-2">Username</th>
+                    <th class="border border-gray-300 p-2">Phone No</th>
+                    <th class="border border-gray-300 p-2">Date</th>
+                    <th class="border border-gray-300 p-2">Price</th>
+                    <th class="border border-gray-300 p-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="todo-list"></tbody>
+        </table>
+        <div class="text-center mt-4">
+            <a href="buy-now.html" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Buy Now</a>
+        </div>
+    </div>
+
+    <script>
+        
+        function loadItems() {
+            const savedItems = JSON.parse(localStorage.getItem("todoItems")) || [];
+            return savedItems;
+        }
+
+    
+        function saveItems(items) {
+            localStorage.setItem("todoItems", JSON.stringify(items));
+        }
+
+        
+        function renderList() {
+            const list = document.getElementById("todo-list");
+            list.innerHTML = "";
+            const items = loadItems();
+            
+            items.forEach((item, index) => {
+                const row = document.createElement("tr");
+                row.className = "border border-gray-300 text-center";
+                row.innerHTML = `
+                    <td class="border border-gray-300 p-2">${item.username}</td>
+                    <td class="border border-gray-300 p-2">${item.phone}</td>
+                    <td class="border border-gray-300 p-2">${item.date}</td>
+                    <td class="border border-gray-300 p-2">${item.price}</td>
+                    <td class="border border-gray-300 p-2 space-x-2">
+                        <button onclick="handleAccept(${index})" class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600">Accept</button>
+                        <button onclick="handleDelete(${index})" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600">Delete</button>
+                    </td>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        
+        function handleAccept(index) {
+            alert(`Accepted item: ${loadItems()[index].username}`);
+        }
+
+        
+        function handleDelete(index) {
+            const items = loadItems();
+            items.splice(index, 1);
+            saveItems(items);
+            renderList();
+        }
+
+        
+        renderList();
+    </script>
+</body>
+</html>
